@@ -1,105 +1,75 @@
-// import "./styles.css";
-// import { format } from 'date-fns';
-// console.log(format(new Date(), 'yyyy/MM/dd kk:mm:ss'))
 import { useState } from "react";
+import "./styles.css";
 
 export default function App() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
-  const center = { display: "flex", justifyContent: "center" };
+  // const center2= { display: "grid", justifyContent: "center" };
+  const center ={}; // { display: "flex", justifyContent: "center" };
+
+  function handleStepChange(val){
+    setStep(val);
+  }
+  function handleCountChange(cou){
+    if(!cou) setCount(0);
+    else
+    setCount(cou);
+  }
+  function handleReset(){
+    setStep(1);
+    setCount(0);
+  }
   return (
-    <div>
-      <div style={center}>
-        <button
-          onClick={() => {
-            if (step > 1) setStep((s) => s - 1);
-          }}
-        >
-          -
-        </button>
-        <span>Step : {step}</span>
-        <button onClick={() => setStep((s) => s + 1)}>+</button>
+    <div className = "App">
+      <div>
+        <input type = "range" min = "1" max = "10" value = {step} onChange = {(e) => handleStepChange(Number(e.target.value))}></input>
+        {step}
       </div>
-      <div style={center}>
+      
+      <div>
         <button onClick={() => setCount((c) => c - step)}>-</button>
-        <span>Count : {count}</span>
+        {/* <span>Count : {count}</span> */}
+        <input value = {count} onChange = {(e) => handleCountChange(Number(e.target.value))}></input>
         <button onClick={() => setCount((c) => c + step)}>+</button>
       </div>
+      <Tracker count = {count}/>
+      {count ? <button style = {center} onClick = {handleReset}>Reset</button> : ""}
+
     </div>
   );
 }
-// export default function App() {
-//   return (
-//     <div className="App">
-//       <Step />
-//       {/* <Counter /> */}
-//     </div>
-//   );
-// }
-function Step() {
-  const [step, setStep] = useState(1);
-  function stepUp() {
-    setStep((s) => s + 1);
-  }
-  function stepDown() {
-    if (step > 1) setStep((s) => s - 1);
-  }
-  // style = {{display : "flex", justifyContent : "center"}}
-  return (
-    <div tyle={{ display: "flex", justifyContent: "center" }}>
-      <button onClick={stepDown}>-</button>
-      Step : {step}
-      <button onClick={stepUp}>+</button>
-      <Counter step={step} />
-    </div>
-  );
-}
-function Counter({ step }) {
-  const [count, setCount] = useState(0);
-  function countUp() {
-    setCount((c) => c + step);
-  }
-  function countDown() {
-    setCount((c) => c - step);
-  }
-  return (
-    <div>
-      <button onClick={countDown}>-</button>
-      Count : {count}
-      <button onClick={countUp}>+</button>
-      <Tracker count={count} />
-    </div>
-  );
-}
-function Tracker({ count }) {
-  // const day = new Date().toUTCString();
-  // const other = moment(day).format("YYYY/MM/DD kk:mm:ss");
-  // console.log(day);
+
+
+function Tracker({ count, center}) {
+  // console.log(count);
+  // console.log(center);
+
   const today = Date.now();
-  // console.log(today);
-  // console.log(today + (86400000 * count));
   const display = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
     day: "2-digit",
     year: "numeric"
   }).format(today);
+
   const display2 = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
     day: "2-digit",
     year: "numeric"
   }).format(today + 86400000 * count);
-  if (count === 0) return <div>Today is {display}</div>;
+
+  if (count === 0) 
+    return <div >Today is {display}</div>;
   else if (count > 0)
     return (
-      <div>
+      <div >
         {count} days from today is {display2}
       </div>
     );
   else
     return (
-      <div>
+      <div >
         {count * -1} days ago was {display2}
       </div>
     );
